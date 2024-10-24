@@ -17,17 +17,14 @@ namespace courseWorkDB
     {
         private int userId;
         private string oldUsername, oldEmail, oldPhonenumber;
-        public Form7(int userId)
+        public Form7()
         {
-            this.userId = userId;
+            userId = Init.getUserId();
             string username, role, email, phone_number, password = "";
             InitializeComponent();
-            string connectionString = "Server=KATEPC\\SQLEXPRESS;Database=FreelancersEmployers;Integrated Security=True";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                
-                connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Пользователи WHERE [Id пользователя] = @id", connection))
+
+            
+                using (SqlCommand command = new SqlCommand("SELECT * FROM Пользователи WHERE [Id пользователя] = @id", ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("@id", userId);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -39,7 +36,7 @@ namespace courseWorkDB
                         phone_number = reader.GetString(5);
                     }
                 }
-            }
+            
             textBox1.Text = username;
             textBox2.Text = password;
             textBox5.Text = role;
@@ -59,23 +56,20 @@ namespace courseWorkDB
             }
             else
             {
-                string connectionString = "Server=KATEPC\\SQLEXPRESS;Database=FreelancersEmployers;Integrated Security=True";
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open(); // Открытие соединения
-                    using (SqlCommand command = new SqlCommand("DELETE FROM Пользователи WHERE [Id пользователя] = @userId;", connection))
+
+                    using (SqlCommand command = new SqlCommand("DELETE FROM Пользователи WHERE [Id пользователя] = @userId;", ConnectionManager.GetConnection()))
                     {
                         command.Parameters.AddWithValue("userId", userId);
                         command.ExecuteNonQuery();
                     }
-                }
-                if (textBox5.Text == "Фрилансер")
+                
+                if (Init.getRole() == Role.Freelancer)
                 {
                     Form5.DeleteAccount();
                 }
-                else if (textBox5.Text == "Наниматель")
+                else if (Init.getRole() == Role.Employer)
                 {
-                    //Form12.DeleteAccount();
+                    Form12.DeleteAccount();
                 }
                 MessageBox.Show("Your account deleted", "Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Close();   
@@ -99,16 +93,16 @@ namespace courseWorkDB
                 return;
             }
             string newUsername, newEmail, newPhoneNumber;
-            byte[] newPassword = Form1.sha256_hash(textBox2.Text);
+            byte[] newPassword = Init.sha256_hash(textBox2.Text);
             newUsername = textBox1.Text;
             newEmail = textBox4.Text;
             newPhoneNumber = textBox3.Text;
-
-            string connectionString = "Server=KATEPC\\SQLEXPRESS;Database=FreelancersEmployers;Integrated Security=True";
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            if (newUsername.Length > 20) { MessageBox.Show("Username is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            else if (newEmail.Length > 30) { MessageBox.Show("Email is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            else if (newPhoneNumber.Length > 20) { MessageBox.Show("Phone number is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            else
             {
-                connection.Open(); // Открытие соединения
-                using (SqlCommand command1 = new SqlCommand("SELECT * FROM Пользователи WHERE [Электронная почта] = @email;", connection))
+                using (SqlCommand command1 = new SqlCommand("SELECT * FROM Пользователи WHERE [Электронная почта] = @email;", ConnectionManager.GetConnection()))
                 {
                     command1.Parameters.AddWithValue("email", newEmail);
                     using (SqlDataReader reader = command1.ExecuteReader())
@@ -120,7 +114,7 @@ namespace courseWorkDB
                         else
                         {
                             reader.Close();
-                            using (SqlCommand command2 = new SqlCommand("SELECT * FROM Пользователи WHERE [Номер телефона] = @phoneNumber;", connection))
+                            using (SqlCommand command2 = new SqlCommand("SELECT * FROM Пользователи WHERE [Номер телефона] = @phoneNumber;", ConnectionManager.GetConnection()))
                             {
                                 command2.Parameters.AddWithValue("phoneNumber", newEmail);
                                 using (SqlDataReader reader1 = command2.ExecuteReader())
@@ -132,7 +126,7 @@ namespace courseWorkDB
                                     else
                                     {
                                         reader1.Close();
-                                        using (SqlCommand command3 = new SqlCommand("SELECT * FROM Пользователи WHERE [Имя пользователя] = @username;", connection))
+                                        using (SqlCommand command3 = new SqlCommand("SELECT * FROM Пользователи WHERE [Имя пользователя] = @username;", ConnectionManager.GetConnection()))
                                         {
                                             command3.Parameters.AddWithValue("username", newUsername);
                                             using (SqlDataReader reader2 = command3.ExecuteReader())
@@ -146,7 +140,7 @@ namespace courseWorkDB
                                                     reader2.Close();
                                                     using (SqlCommand command = new SqlCommand("UPDATE Пользователи " +
                                                         "SET [Электронная почта] = @newEmail, [Номер телефона] = @newPhoneNumber, [Имя пользователя] = @newUsername, Пароль = @newPassword " +
-                                                        "WHERE [Id пользователя] = @userId;", connection))
+                                                        "WHERE [Id пользователя] = @userId;", ConnectionManager.GetConnection()))
                                                     {
                                                         command.Parameters.AddWithValue("newEmail", newEmail);
                                                         command.Parameters.AddWithValue("newPhoneNumber", newPhoneNumber);
@@ -155,13 +149,13 @@ namespace courseWorkDB
                                                         command.Parameters.AddWithValue("userId", userId);
 
                                                         command.ExecuteNonQuery();
-                                                        if (textBox5.Text == "Фрилансер")
+                                                        if (Init.getRole() == Role.Freelancer)
                                                         {
                                                             Form5.ChangeAccount(newUsername, newEmail, newPhoneNumber);
                                                         }
-                                                        else if (textBox5.Text == "Наниматель")
+                                                        else if (Init.getRole() == Role.Employer)
                                                         {
-                                                            //Form12.ChangeAccount(newUsername, newEmail, newPhoneNumber);
+                                                            Form12.ChangeAccount(newUsername, newEmail, newPhoneNumber);
                                                         }
                                                         this.Close();
                                                     }

@@ -16,10 +16,10 @@ namespace courseWorkDB
         private int freelancerId;
         private int bidId;
         private bool newBid = false;
-        public Form9(int fId)
+        public Form9()
         {
             InitializeComponent();
-            this.freelancerId = fId;
+            freelancerId = Init.getFeId();
             UpdateTable();
         }
 
@@ -32,14 +32,11 @@ namespace courseWorkDB
             dataGridView1.Columns.Add("bet", "Bet");
             dataGridView1.Columns.Add("status", "Status");
 
-            string connectionString = "Server=KATEPC\\SQLEXPRESS;Database=FreelancersEmployers;Integrated Security=True";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
+
                 using (SqlCommand command = new SqlCommand("SELECT Предложения.[Id предложения], Проекты.[Название проекта], " +
                     "Предложения.[Текст предложения], Предложения.[Сумма ставки],  Предложения.[Статус предложения] " +
                     "FROM Предложения JOIN Проекты ON Предложения.[Id проекта] = Проекты.[Id проекта] " +
-                    "WHERE Предложения.[Id фрилансера] = @freelancer_id;", connection))
+                    "WHERE Предложения.[Id фрилансера] = @freelancer_id;", ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("freelancer_id", freelancerId);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -54,7 +51,7 @@ namespace courseWorkDB
                         }
                     }
                 }
-            }
+            
         }
 
         private void button3_Click(object sender, EventArgs e) // new bid
@@ -75,24 +72,24 @@ namespace courseWorkDB
         {
             if (int.TryParse(textBox1.Text, out int project_id) && int.TryParse(textBox2.Text, out int bet)) {
                 string text = richTextBox1.Text;
-                string com;
-                if (newBid)
-                {
-                    com = "INSERT INTO Предложения ([Id проекта], [Id фрилансера], [Текст предложения], [Сумма ставки]) " +
-                        "VALUES (@project_id, @freelancer_id, @text, @sum);";
-                }
+                if (text.Length > 1000) { MessageBox.Show("Text is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
                 else
                 {
-                    com = "UPDATE Предложения SET [Текст предложения] = @text, [Сумма ставки] = @sum " +
-                        "WHERE [Id предложения] = @bid_id;";
-                }
-                string connectionString = "Server=KATEPC\\SQLEXPRESS;Database=FreelancersEmployers;Integrated Security=True";
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
+                    string com;
                     if (newBid)
                     {
-                        using (SqlCommand command1 = new SqlCommand("SELECT * FROM Проекты WHERE [Id проекта] = @id", connection))
+                        com = "INSERT INTO Предложения ([Id проекта], [Id фрилансера], [Текст предложения], [Сумма ставки]) " +
+                            "VALUES (@project_id, @freelancer_id, @text, @sum);";
+                    }
+                    else
+                    {
+                        com = "UPDATE Предложения SET [Текст предложения] = @text, [Сумма ставки] = @sum " +
+                            "WHERE [Id предложения] = @bid_id;";
+                    }
+
+                    if (newBid)
+                    {
+                        using (SqlCommand command1 = new SqlCommand("SELECT * FROM Проекты WHERE [Id проекта] = @id", ConnectionManager.GetConnection()))
                         {
                             command1.Parameters.AddWithValue("id", project_id);
                             using (SqlDataReader reader = command1.ExecuteReader())
@@ -100,7 +97,7 @@ namespace courseWorkDB
                                 if (reader.HasRows)
                                 {
                                     reader.Close();
-                                    using (SqlCommand command = new SqlCommand(com, connection))
+                                    using (SqlCommand command = new SqlCommand(com, ConnectionManager.GetConnection()))
                                     {
                                         command.Parameters.AddWithValue("project_id", project_id);
                                         command.Parameters.AddWithValue("freelancer_id", freelancerId);
@@ -119,7 +116,7 @@ namespace courseWorkDB
                     }
                     else
                     {
-                        using (SqlCommand command = new SqlCommand(com, connection))
+                        using (SqlCommand command = new SqlCommand(com, ConnectionManager.GetConnection()))
                         {
                             command.Parameters.AddWithValue("text", text);
                             command.Parameters.AddWithValue("sum", bet);
@@ -127,21 +124,22 @@ namespace courseWorkDB
                             command.ExecuteNonQuery();
                         }
                     }
+
+                    UpdateTable();
+
+                    label3.Visible = false;
+                    label2.Visible = false;
+                    label5.Visible = false;
+                    textBox1.Visible = false;
+                    textBox1.Enabled = false;
+                    textBox2.Visible = false;
+                    richTextBox1.Visible = false;
+                    button5.Visible = false;
+                    newBid = false;
+                    textBox1.Text = "";
+                    textBox2.Text = "";
+                    richTextBox1.Text = "";
                 }
-                UpdateTable();
-                
-                label3.Visible = false;
-                label2.Visible = false;
-                label5.Visible = false;
-                textBox1.Visible = false;
-                textBox1.Enabled = false;
-                textBox2.Visible = false;
-                richTextBox1.Visible = false;
-                button5.Visible = false;
-                newBid = false;
-                textBox1.Text = "";
-                textBox2.Text = "";
-                richTextBox1.Text = "";
             }
             else
             {
@@ -153,11 +151,8 @@ namespace courseWorkDB
         {
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int bid_id))
             {
-                string connectionString = "Server=KATEPC\\SQLEXPRESS;Database=FreelancersEmployers;Integrated Security=True";
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand("SELECT * FROM Предложения WHERE [Id предложения] = @id", connection))
+
+                    using (SqlCommand command = new SqlCommand("SELECT * FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
                     {
                         command.Parameters.AddWithValue("id", bid_id);
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -183,7 +178,7 @@ namespace courseWorkDB
                             }
                         }
                     }
-                }
+                
             }
             else
             {
@@ -195,11 +190,8 @@ namespace courseWorkDB
         {
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int bid_id))
             {
-                string connectionString = "Server=KATEPC\\SQLEXPRESS;Database=FreelancersEmployers;Integrated Security=True";
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand("SELECT * FROM Предложения WHERE [Id предложения] = @id", connection))
+
+                    using (SqlCommand command = new SqlCommand("SELECT * FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
                     {
                         command.Parameters.AddWithValue("id", bid_id);
                         using (SqlDataReader reader = command.ExecuteReader())
@@ -210,11 +202,24 @@ namespace courseWorkDB
                                 DialogResult result = MessageBox.Show("Are you sure that you want to delete this bid?", "Confirm action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                                 if (result == DialogResult.Yes) {
                                     reader.Close();
-                                    using (SqlCommand command1 = new SqlCommand("DELETE FROM Предложения WHERE [Id предложения] = @id", connection))
+                                    using (SqlCommand command1 = new SqlCommand("DELETE FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
                                     {
                                         command1.Parameters.AddWithValue("id", bidId);
                                         command1.ExecuteNonQuery();
-                                        UpdateTable();
+
+                                    label3.Visible = false;
+                                    label2.Visible = false;
+                                    label5.Visible = false;
+                                    textBox1.Visible = false;
+                                    textBox1.Enabled = false;
+                                    textBox2.Visible = false;
+                                    richTextBox1.Visible = false;
+                                    button5.Visible = false;
+                                    newBid = false;
+                                    textBox1.Text = "";
+                                    textBox2.Text = "";
+                                    richTextBox1.Text = "";
+                                    UpdateTable();
                                     }
                                 }
                             }
@@ -224,7 +229,7 @@ namespace courseWorkDB
                             }
                         }
                     }
-                }
+                
             }
             else
             {

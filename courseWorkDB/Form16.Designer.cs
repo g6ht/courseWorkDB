@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label4 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
@@ -52,6 +54,7 @@
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(154, 20);
             this.dateTimePicker1.TabIndex = 59;
+            this.dateTimePicker1.Visible = false;
             // 
             // label4
             // 
@@ -61,6 +64,7 @@
             this.label4.Size = new System.Drawing.Size(97, 25);
             this.label4.TabIndex = 58;
             this.label4.Text = "End date:";
+            this.label4.Visible = false;
             // 
             // button5
             // 
@@ -71,18 +75,20 @@
             this.button5.TabIndex = 57;
             this.button5.Text = "Save";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Visible = false;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // textBox2
             // 
             this.textBox2.BackColor = System.Drawing.Color.Linen;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.textBox2.Enabled = false;
             this.textBox2.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox2.Location = new System.Drawing.Point(836, 226);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(154, 27);
             this.textBox2.TabIndex = 54;
+            this.textBox2.Visible = false;
             // 
             // label2
             // 
@@ -92,18 +98,19 @@
             this.label2.Size = new System.Drawing.Size(112, 25);
             this.label2.TabIndex = 53;
             this.label2.Text = "Freelancer id:";
+            this.label2.Visible = false;
             // 
             // textBox1
             // 
             this.textBox1.BackColor = System.Drawing.Color.Linen;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.textBox1.Enabled = false;
             this.textBox1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox1.Location = new System.Drawing.Point(836, 189);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(154, 27);
             this.textBox1.TabIndex = 52;
+            this.textBox1.Visible = false;
             // 
             // label3
             // 
@@ -113,6 +120,7 @@
             this.label3.Size = new System.Drawing.Size(112, 25);
             this.label3.TabIndex = 51;
             this.label3.Text = "Project id:";
+            this.label3.Visible = false;
             // 
             // button3
             // 
@@ -123,6 +131,7 @@
             this.button3.TabIndex = 49;
             this.button3.Text = "New contract";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button2
             // 
@@ -133,6 +142,7 @@
             this.button2.TabIndex = 48;
             this.button2.Text = "Delete contract";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button1
             // 
@@ -143,13 +153,32 @@
             this.button1.TabIndex = 47;
             this.button1.Text = "Edit contract";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView1.BackgroundColor = System.Drawing.Color.Linen;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle10;
             this.dataGridView1.GridColor = System.Drawing.Color.PeachPuff;
             this.dataGridView1.Location = new System.Drawing.Point(24, 68);
             this.dataGridView1.Name = "dataGridView1";
@@ -174,6 +203,7 @@
             this.dateTimePicker2.Name = "dateTimePicker2";
             this.dateTimePicker2.Size = new System.Drawing.Size(154, 20);
             this.dateTimePicker2.TabIndex = 61;
+            this.dateTimePicker2.Visible = false;
             // 
             // label5
             // 
@@ -183,6 +213,7 @@
             this.label5.Size = new System.Drawing.Size(97, 25);
             this.label5.TabIndex = 60;
             this.label5.Text = "Start date:";
+            this.label5.Visible = false;
             // 
             // Form16
             // 

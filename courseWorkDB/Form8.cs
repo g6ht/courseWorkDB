@@ -19,16 +19,15 @@ namespace courseWorkDB
 
             dataGridView1.Columns.Clear();
             dataGridView1.Columns.Add("id", "Project id");
+            dataGridView1.Columns.Add("employer", "Employer");
             dataGridView1.Columns.Add("name", "Project name");
             dataGridView1.Columns.Add("description", "Description");
             dataGridView1.Columns.Add("budget", "Budget");
             dataGridView1.Columns.Add("deadline", "Deadline");
             dataGridView1.Columns.Add("status", "Status");
-            string connectionString = "Server=KATEPC\\SQLEXPRESS;Database=FreelancersEmployers;Integrated Security=True";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Проекты", connection))
+
+            using (SqlCommand command = new SqlCommand("SELECT Проекты.*, Наниматели.[Название компании] " +
+                "FROM Проекты JOIN Наниматели ON Проекты.[Id нанимателя] = Наниматели.[Id нанимателя];", ConnectionManager.GetConnection()))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
                     { 
@@ -36,13 +35,13 @@ namespace courseWorkDB
                         {
                             while (reader.Read())
                             {
-                                dataGridView1.Rows.Add(reader.GetInt32(0), reader.GetString(2),
+                                dataGridView1.Rows.Add(reader.GetInt32(0), reader.GetString(7), reader.GetString(2),
                                     reader.GetString(3), reader.GetInt32(4), reader.GetDateTime(5).ToShortDateString(), reader.GetString(6));
                             }
                         }
                     }
                 }
-            }
+            
         }
     }
 }

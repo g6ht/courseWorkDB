@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -51,6 +53,7 @@
             this.dateTimePicker2.Name = "dateTimePicker2";
             this.dateTimePicker2.Size = new System.Drawing.Size(154, 20);
             this.dateTimePicker2.TabIndex = 76;
+            this.dateTimePicker2.Visible = false;
             // 
             // label5
             // 
@@ -60,6 +63,7 @@
             this.label5.Size = new System.Drawing.Size(97, 25);
             this.label5.TabIndex = 75;
             this.label5.Text = "Date:";
+            this.label5.Visible = false;
             // 
             // label4
             // 
@@ -69,6 +73,7 @@
             this.label4.Size = new System.Drawing.Size(97, 25);
             this.label4.TabIndex = 73;
             this.label4.Text = "Status:";
+            this.label4.Visible = false;
             // 
             // button5
             // 
@@ -79,18 +84,19 @@
             this.button5.TabIndex = 72;
             this.button5.Text = "Save";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Visible = false;
             // 
             // textBox2
             // 
             this.textBox2.BackColor = System.Drawing.Color.Linen;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.textBox2.Enabled = false;
             this.textBox2.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox2.Location = new System.Drawing.Point(836, 189);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(154, 27);
             this.textBox2.TabIndex = 71;
+            this.textBox2.Visible = false;
             // 
             // label2
             // 
@@ -100,18 +106,19 @@
             this.label2.Size = new System.Drawing.Size(112, 25);
             this.label2.TabIndex = 70;
             this.label2.Text = " Amount:";
+            this.label2.Visible = false;
             // 
             // textBox1
             // 
             this.textBox1.BackColor = System.Drawing.Color.Linen;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.textBox1.Enabled = false;
             this.textBox1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox1.Location = new System.Drawing.Point(836, 152);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(154, 27);
             this.textBox1.TabIndex = 69;
+            this.textBox1.Visible = false;
             // 
             // label3
             // 
@@ -121,6 +128,7 @@
             this.label3.Size = new System.Drawing.Size(112, 25);
             this.label3.TabIndex = 68;
             this.label3.Text = "Contract id:";
+            this.label3.Visible = false;
             // 
             // button3
             // 
@@ -146,8 +154,26 @@
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView1.BackgroundColor = System.Drawing.Color.Linen;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.GridColor = System.Drawing.Color.PeachPuff;
             this.dataGridView1.Location = new System.Drawing.Point(24, 69);
             this.dataGridView1.Name = "dataGridView1";
@@ -172,6 +198,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(154, 21);
             this.comboBox1.TabIndex = 77;
+            this.comboBox1.Visible = false;
             // 
             // Form17
             // 

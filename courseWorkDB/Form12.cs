@@ -14,53 +14,73 @@ namespace courseWorkDB
 {
     public partial class Form12 : Form // employer
     {
-        private Employer currentUser;
-        public Form12(bool newAccount, int id, int eId)
+        private static Employer currentUser;
+        public Form12()
         {
             InitializeComponent();
-            string connectionString = "Server=KATEPC\\SQLEXPRESS;Database=FreelancersEmployers;Integrated Security=True";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string username, role, email, phone_number;
-                connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Пользователи WHERE [Id пользователя] = @id", connection))
-                {
-                    command.Parameters.AddWithValue("@id", id);
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        reader.Read();
-                        username = reader.GetString(1);
-                        role = reader.GetString(3);
-                        email = reader.GetString(4);
-                        phone_number = reader.GetString(5);
-                    }
-                }
-
-                if (!newAccount)
-                {
-                    string companyName = "", info = "";
-                    using (SqlCommand command = new SqlCommand("SELECT * FROM Наниматели WHERE [Id нанимателя] = @id;", connection))
-                    {
-                        command.Parameters.AddWithValue("@id", eId);
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            reader.Read();
-                            if (!reader.IsDBNull(2)) { companyName = reader.GetString(2); }
-                            if (!reader.IsDBNull(3)) { info = reader.GetString(3); }
-                        }
-                    }
-                    currentUser = new Employer(id, username, role, email, phone_number, eId, companyName, info);
-                }
-                else { currentUser = new Employer(id, username, role, email, phone_number, eId); }
-            }
+            currentUser = (Employer)Init.CurrentUser;
+            
             label1.Text += currentUser.Username;
             textBox1.Text = currentUser.CompanyName;
             richTextBox1.Text = currentUser.Info;
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        public static void ChangeInfo(string newCompanyName, string newInfo)
         {
+            currentUser.CompanyName = newCompanyName;
+            currentUser.Info = newInfo;
+        }
+        public static void ChangeAccount(string newUsername, string newEmail, string newPhoneNumber)
+        {
+            currentUser.Username = newUsername;
+            currentUser.Email = newEmail;
+            currentUser.PhoneNumber = newPhoneNumber;
+        }
+        public static void DeleteAccount()
+        {
+            Init.CurrentUser = null;
+            currentUser = null;
+        }
+        private void UpdatePortfolio()
+        {
+            textBox1.Text = currentUser.CompanyName;
+            richTextBox1.Text = currentUser.Info;
+        }
+        private void button1_Click(object sender, EventArgs e) // edit portfolio
+        {
+            Form13 form13 = new Form13();
+            form13.ShowDialog();
+            UpdatePortfolio();
+        }
 
+        private void button2_Click(object sender, EventArgs e) // manage account
+        {
+            Form7 form7 = new Form7();
+            form7.ShowDialog();
+            if (currentUser == null) { this.Close(); return; }
+        }
+
+        private void button3_Click(object sender, EventArgs e) // search for bids
+        {
+            Form14 form14 = new Form14();
+            form14.ShowDialog();
+        }
+
+        private void button4_Click(object sender, EventArgs e) // manage projects
+        {
+            Form15 form15 = new Form15();
+            form15.ShowDialog();
+        }
+
+        private void button5_Click(object sender, EventArgs e) // manage contracts
+        {
+            Form16 form16 = new Form16();
+            form16.ShowDialog();
+        }
+
+        private void button6_Click(object sender, EventArgs e) // manage payments
+        {
+            Form17 form17 = new Form17();
+            form17.ShowDialog();
         }
     }
 }

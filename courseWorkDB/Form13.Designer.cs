@@ -45,6 +45,7 @@
             this.button1.TabIndex = 30;
             this.button1.Text = "Save changes";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label2
             // 
@@ -61,10 +62,9 @@
             this.richTextBox2.BackColor = System.Drawing.Color.Linen;
             this.richTextBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.richTextBox2.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.richTextBox2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.richTextBox2.Location = new System.Drawing.Point(162, 110);
             this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.ReadOnly = true;
             this.richTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.richTextBox2.Size = new System.Drawing.Size(140, 76);
             this.richTextBox2.TabIndex = 35;
@@ -87,7 +87,6 @@
             this.textBox1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox1.Location = new System.Drawing.Point(162, 67);
             this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(140, 27);
             this.textBox1.TabIndex = 33;
             // 

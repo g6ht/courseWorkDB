@@ -13,9 +13,10 @@ namespace courseWorkDB
 {
     public partial class Form11 : Form
     {
-        public Form11(int fId)
+        public Form11()
         {
             InitializeComponent();
+            int fId = Init.getFeId();
 
             dataGridView1.Columns.Clear();
             dataGridView1.Columns.Add("id1", "Payment id");
@@ -24,14 +25,11 @@ namespace courseWorkDB
             dataGridView1.Columns.Add("sum", "Payment amount");
             dataGridView1.Columns.Add("date", "Payment date");
             dataGridView1.Columns.Add("status", "Status");
-            string connectionString = "Server=KATEPC\\SQLEXPRESS;Database=FreelancersEmployers;Integrated Security=True";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
+
                 using (SqlCommand command = new SqlCommand("SELECT Платежи.[Id платежа], Платежи.[Id контракта],  Проекты.[Название проекта], " +
                     "Платежи.[Сумма платежа], Платежи.[Дата платежа],  Платежи.[Статус платежа] " + 
                     "FROM Платежи JOIN Контракты ON Платежи.[Id контракта] = Контракты.[Id контракта] " +
-                    "JOIN Проекты ON Контракты.[Id проекта] = Проекты.[Id проекта] WHERE Контракты.[Id фрилансера] = @freelancer_id;", connection))
+                    "JOIN Проекты ON Контракты.[Id проекта] = Проекты.[Id проекта] WHERE Контракты.[Id фрилансера] = @freelancer_id;", ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("freelancer_id", fId);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -46,7 +44,7 @@ namespace courseWorkDB
                         }
                     }
                 }
-            }
+            
         }
     }
 }

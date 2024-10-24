@@ -15,9 +15,9 @@ namespace courseWorkDB
     public partial class Form6 : Form // freelancer change portfolio
     {
         private int freelancerId;
-        public Form6(int fId)
+        public Form6()
         {
-            freelancerId = fId;
+            freelancerId = Init.getFeId();
             InitializeComponent();
         }
 
@@ -30,14 +30,14 @@ namespace courseWorkDB
                 newExperince = textBox1.Text;
                 newSkills = richTextBox1.Text;
                 newInfo = richTextBox2.Text;
-
-                string connectionString = "Server=KATEPC\\SQLEXPRESS;Database=FreelancersEmployers;Integrated Security=True";
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                if (newExperince.Length > 10) { MessageBox.Show("Work experience is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+                else if (newSkills.Length > 1000) { MessageBox.Show("Skills is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+                else if (newInfo.Length > 1000) { MessageBox.Show("Bio is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+                else
                 {
-                    connection.Open();
                     using (SqlCommand command = new SqlCommand("UPDATE Фрилансеры " +
                         "SET Навыки = @newSkills, [Опыт работы] = @newExperince, [Часовая ставка] = @newRate, [Информация о себе] = @newInfo " +
-                        "WHERE [Id фрилансера] = @freelancerId;", connection))
+                        "WHERE [Id фрилансера] = @freelancerId;", ConnectionManager.GetConnection()))
                     {
                         command.Parameters.AddWithValue("@newSkills", newSkills);
                         command.Parameters.AddWithValue("@newExperince", newExperince);
@@ -46,9 +46,10 @@ namespace courseWorkDB
                         command.Parameters.AddWithValue("@freelancerId", freelancerId);
                         command.ExecuteNonQuery();
                     }
+
+                    Form5.ChangeInfo(newSkills, newExperince, newRate, newInfo);
+                    this.Close();
                 }
-                Form5.ChangeInfo(newSkills, newExperince, newRate, newInfo);
-                this.Close();
             }
             else {
                 MessageBox.Show("Hourly rate should be integer", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -13,8 +13,24 @@ using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
 
 /*
-TODO:   
+TODO:   (сделано что-то похожее)вынести юзера в неймспейс
+        (типо сделано)создавать юзера в отдельном классе (мб все статики туда вынести)
+        (done)подключаться к бд в главной функции 1 раз
+
+        (да нахуй надо)вынести запросы в отдельную строчку и добавить комментарии с номером запроса
+
+        (сделано)выводить таблицы красивее (можно отображать имя фрилансера/нанимателя, они уникальны)
+        (сделано)проверять че там чел вводит когда хочет что то поменять (чтобы за границы не вышел в бд)
+
+        осталось только платежи, оформить триггеры в отчёте, мб придется менять запросы, что то сделать с тем, что я не удаляю проекты и контракты
+        пристроить хранимые процедуры
+        как то надо статусы менять контрактам, проектам и предложениям (мб все таки вернуть кнопки нанимателю но хз тогда что с контрактами)
+
+        
         глазик на пароль
+
+        если будет время то организовать запросы транзакциями
+        мб сделать типо сумма заработанных бабок фрилансером?
 */
 
 namespace courseWorkDB
@@ -25,31 +41,16 @@ namespace courseWorkDB
         {
             InitializeComponent();
 
-            //string trigger1 = "CREATE TRIGGER [dbo].[NewBid] ON [dbo].[Предложения] INSTEAD OF INSERT " +
-            //    "AS BEGIN " +
-            //    "INSERT INTO Предложения ([Id проекта], [Id фрилансера], [Текст предложения], [Сумма ставки], [Статус предложения]) " +
-            //    "SELECT [Id проекта], [Id фрилансера], [Текст предложения], [Сумма ставки], 'На рассмотрении' FROM inserted; " +
+            //string trigger1 = "CREATE TRIGGER [dbo].[NewContract] ON [dbo].[Контракты] INSTEAD OF INSERT " +
+            //    "AS BEGIN INSERT INTO Контракты ([Id проекта], [Id фрилансера], [Дата начала], [Дата окончания], [Статус контракта]) " +
+            //    "SELECT [Id проекта], [Id фрилансера], [Дата начала], [Дата окончания], 'Активен' FROM inserted; " +
             //    "END;";
 
-            //string connectionString = "Server=KATEPC\\SQLEXPRESS;Database=FreelancersEmployers;Integrated Security=True";
-            //using (SqlConnection connection = new SqlConnection(connectionString))
+            //using (SqlCommand command = new SqlCommand(trigger1, ConnectionManager.GetConnection()))
             //{
-            //    connection.Open();
-            //    using (SqlCommand command = new SqlCommand(trigger1, connection))
-            //    {
-            //        command.ExecuteNonQuery();
-            //    }
+            //    command.ExecuteNonQuery();
             //}
-        }
 
-        public static byte[] sha256_hash(string value)
-        {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = Encoding.UTF8.GetBytes(value);
-                byte[] hash = sha256.ComputeHash(bytes);
-                return hash;
-            }
         }
 
         private void button1_Click(object sender, EventArgs e) // log in
