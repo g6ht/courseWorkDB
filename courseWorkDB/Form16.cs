@@ -14,8 +14,6 @@ namespace courseWorkDB
     public partial class Form16 : Form
     {
         private int employerId;
-        private int projectId;
-        private int freelancerId;
         private int contractId;
         private bool newContract = false;
         public Form16()
@@ -101,8 +99,8 @@ namespace courseWorkDB
                                 reader.Close();
                                 using (SqlCommand command2 = new SqlCommand("SELECT * FROM Фрилансеры WHERE [Id фрилансера] = @fid", ConnectionManager.GetConnection()))
                                 {
-                                    command1.Parameters.AddWithValue("fid", freelancer_id);
-                                    using (SqlDataReader reader1 = command1.ExecuteReader())
+                                    command2.Parameters.AddWithValue("fid", freelancer_id);
+                                    using (SqlDataReader reader1 = command2.ExecuteReader())
                                     {
                                         if (reader1.HasRows)
                                         {

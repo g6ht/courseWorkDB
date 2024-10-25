@@ -35,8 +35,20 @@ namespace courseWorkDB
                         {
                             while (reader.Read())
                             {
-                                dataGridView1.Rows.Add(reader.GetInt32(0), reader.GetString(7), reader.GetString(2),
-                                    reader.GetString(3), reader.GetInt32(4), reader.GetDateTime(5).ToShortDateString(), reader.GetString(6));
+                            int pid = 0;
+                            string employer = "";
+                            string pname = "";
+                            string pdesc = "";
+                            int pbudget = 0;
+                            string deadline = reader.GetDateTime(5).ToShortDateString();
+                            string status = reader.GetString(6);
+                            if (!reader.IsDBNull(0)) { pid = reader.GetInt32(0); }
+                            if (!reader.IsDBNull(7)) { employer = reader.GetString(7); }
+                            if (!reader.IsDBNull(2)) { pname = reader.GetString(2); }
+                            if (!reader.IsDBNull(3)) { pdesc = reader.GetString(3); }
+                            if (!reader.IsDBNull(4)) { pbudget = reader.GetInt32(4); }
+
+                            dataGridView1.Rows.Add(pid, employer, pname, pdesc, pbudget, deadline, status);
                             }
                         }
                     }

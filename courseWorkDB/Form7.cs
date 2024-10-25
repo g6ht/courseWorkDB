@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
@@ -56,19 +57,35 @@ namespace courseWorkDB
             }
             else
             {
-
-                    using (SqlCommand command = new SqlCommand("DELETE FROM Пользователи WHERE [Id пользователя] = @userId;", ConnectionManager.GetConnection()))
-                    {
-                        command.Parameters.AddWithValue("userId", userId);
-                        command.ExecuteNonQuery();
-                    }
                 
                 if (Init.getRole() == Role.Freelancer)
                 {
+                    using (SqlCommand command = new SqlCommand("DeleteFreelancer", ConnectionManager.GetConnection()))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        SqlParameter idParam = new SqlParameter
+                        {
+                            ParameterName = "@userId",
+                            Value = userId
+                        };
+                        command.Parameters.Add(idParam);
+                        command.ExecuteNonQuery();
+                    }
                     Form5.DeleteAccount();
                 }
                 else if (Init.getRole() == Role.Employer)
                 {
+                    using (SqlCommand command = new SqlCommand("DeleteEmployer", ConnectionManager.GetConnection()))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        SqlParameter idParam = new SqlParameter
+                        {
+                            ParameterName = "@userId",
+                            Value = userId
+                        };
+                        command.Parameters.Add(idParam);
+                        command.ExecuteNonQuery();
+                    }
                     Form12.DeleteAccount();
                 }
                 MessageBox.Show("Your account deleted", "Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
