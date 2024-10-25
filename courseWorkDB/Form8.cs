@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace courseWorkDB
@@ -27,14 +19,14 @@ namespace courseWorkDB
             dataGridView1.Columns.Add("status", "Status");
 
             using (SqlCommand command = new SqlCommand("SELECT Проекты.*, Наниматели.[Название компании] " +
-                "FROM Проекты JOIN Наниматели ON Проекты.[Id нанимателя] = Наниматели.[Id нанимателя];", ConnectionManager.GetConnection()))
+                "FROM Проекты LEFT JOIN Наниматели ON Проекты.[Id нанимателя] = Наниматели.[Id нанимателя];", ConnectionManager.GetConnection()))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    { 
                     if (reader.HasRows)
+                    {
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
                             int pid = 0;
                             string employer = "";
                             string pname = "";
@@ -47,13 +39,14 @@ namespace courseWorkDB
                             if (!reader.IsDBNull(2)) { pname = reader.GetString(2); }
                             if (!reader.IsDBNull(3)) { pdesc = reader.GetString(3); }
                             if (!reader.IsDBNull(4)) { pbudget = reader.GetInt32(4); }
-
+                            if (reader.IsDBNull(1)) { employer = "deleted account"; }
                             dataGridView1.Rows.Add(pid, employer, pname, pdesc, pbudget, deadline, status);
-                            }
+
                         }
                     }
                 }
-            
+            }
+
         }
     }
 }

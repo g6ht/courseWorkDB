@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace courseWorkDB
 {
@@ -24,20 +15,20 @@ namespace courseWorkDB
             string username, role, email, phone_number, password = "";
             InitializeComponent();
 
-            
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Пользователи WHERE [Id пользователя] = @id", ConnectionManager.GetConnection()))
+
+            using (SqlCommand command = new SqlCommand("SELECT * FROM Пользователи WHERE [Id пользователя] = @id", ConnectionManager.GetConnection()))
+            {
+                command.Parameters.AddWithValue("@id", userId);
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    command.Parameters.AddWithValue("@id", userId);
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        reader.Read();
-                        username = reader.GetString(1);
-                        role = reader.GetString(3);
-                        email = reader.GetString(4);
-                        phone_number = reader.GetString(5);
-                    }
+                    reader.Read();
+                    username = reader.GetString(1);
+                    role = reader.GetString(3);
+                    email = reader.GetString(4);
+                    phone_number = reader.GetString(5);
                 }
-            
+            }
+
             textBox1.Text = username;
             textBox2.Text = password;
             textBox5.Text = role;
@@ -57,40 +48,46 @@ namespace courseWorkDB
             }
             else
             {
-                
-                if (Init.getRole() == Role.Freelancer)
+                SqlTransaction transaction = ConnectionManager.GetConnection().BeginTransaction();
+                SqlCommand command = ConnectionManager.GetConnection().CreateCommand();
+                command.Transaction = transaction;
+                command.CommandType = CommandType.StoredProcedure;
+                SqlParameter idParam = new SqlParameter { ParameterName = "@userId", Value = userId };
+                command.Parameters.Add(idParam);
+                try
                 {
-                    using (SqlCommand command = new SqlCommand("DeleteFreelancer", ConnectionManager.GetConnection()))
+                    if (Init.getRole() == Role.Freelancer)
                     {
-                        command.CommandType = CommandType.StoredProcedure;
-                        SqlParameter idParam = new SqlParameter
-                        {
-                            ParameterName = "@userId",
-                            Value = userId
-                        };
-                        command.Parameters.Add(idParam);
+                        command.CommandText = "DeleteFreelancer";
                         command.ExecuteNonQuery();
+                        Form5.DeleteAccount();
                     }
-                    Form5.DeleteAccount();
+                    else if (Init.getRole() == Role.Employer)
+                    {
+                        command.CommandText = "DeleteEmployer";
+                        command.ExecuteNonQuery();
+                        Form12.DeleteAccount();
+                    }
+                    transaction.Commit();
+                    MessageBox.Show("Your account deleted", "Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.Close();
                 }
-                else if (Init.getRole() == Role.Employer)
+                catch (Exception ex)
                 {
-                    using (SqlCommand command = new SqlCommand("DeleteEmployer", ConnectionManager.GetConnection()))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        SqlParameter idParam = new SqlParameter
-                        {
-                            ParameterName = "@userId",
-                            Value = userId
-                        };
-                        command.Parameters.Add(idParam);
-                        command.ExecuteNonQuery();
-                    }
-                    Form12.DeleteAccount();
+                    MessageBox.Show("Could not delete account", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    transaction.Rollback();
                 }
-                MessageBox.Show("Your account deleted", "Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();   
             }
+        }
+
+        private void label7_MouseEnter(object sender, EventArgs e)
+        {
+            textBox2.PasswordChar = '\0';
+        }
+
+        private void label7_MouseLeave(object sender, EventArgs e)
+        {
+            textBox2.PasswordChar = '*';
         }
 
         private void button1_Click(object sender, EventArgs e) // change
@@ -186,7 +183,7 @@ namespace courseWorkDB
                     }
                 }
             }
-            
+
         }
     }
 }

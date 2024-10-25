@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace courseWorkDB
+﻿namespace courseWorkDB
 {
     public class Employer : User
     {
@@ -24,7 +18,6 @@ namespace courseWorkDB
             this.companyName = companyName;
             this.info = info;
         }
-        public int EmployerId { get { return this.employerId; } set { this.employerId = value; } }
         public string CompanyName { get { return this.companyName; } set { this.companyName = value; } }
         public string Info { get { return this.info; } set { this.info = value; } }
     }

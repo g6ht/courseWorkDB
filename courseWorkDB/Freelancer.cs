@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace courseWorkDB
+﻿namespace courseWorkDB
 {
     public class Freelancer : User
     {
@@ -30,7 +24,6 @@ namespace courseWorkDB
             this.rate = rate;
             this.info = info;
         }
-        public int FreelancerId { get { return this.freelancerId; } set { this.freelancerId = value; } }
         public string Skills { get { return this.skills; } set { this.skills = value; } }
         public string Experience { get { return this.experience; } set { this.experience = value; } }
         public int Rate { get { return this.rate; } set { this.rate = value; } }

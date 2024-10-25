@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace courseWorkDB
 {
@@ -69,12 +62,12 @@ namespace courseWorkDB
 
         private void button5_Click(object sender, EventArgs e) // save
         {
-            if(int.TryParse(textBox2.Text, out int budget))
+            if (int.TryParse(textBox2.Text, out int budget))
             {
                 string name = textBox1.Text;
                 string info = richTextBox1.Text;
                 DateTime deadline = dateTimePicker1.Value;
-                if(name.Length > 100) { MessageBox.Show("Project name is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+                if (name.Length > 100) { MessageBox.Show("Project name is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
                 else if (info.Length > 1000) { MessageBox.Show("Project info is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
                 else if (name == "") { MessageBox.Show("Project name is required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
                 else
@@ -92,7 +85,7 @@ namespace courseWorkDB
                     }
                     if (newProject)
                     {
-                        
+
                         using (SqlCommand command = new SqlCommand(com, ConnectionManager.GetConnection()))
                         {
                             command.Parameters.AddWithValue("employer_id", employerId);
@@ -102,13 +95,13 @@ namespace courseWorkDB
                             command.Parameters.AddWithValue("date", deadline);
                             command.ExecuteNonQuery();
                         }
-                                
+
                     }
                     else
                     {
                         using (SqlCommand command = new SqlCommand(com, ConnectionManager.GetConnection()))
                         {
-                            
+
                             command.Parameters.AddWithValue("new_info", info);
                             command.Parameters.AddWithValue("new_budget", budget);
                             command.Parameters.AddWithValue("new_date", deadline);
@@ -169,7 +162,7 @@ namespace courseWorkDB
                         }
                         else
                         {
-                            MessageBox.Show("To edit or delete project, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("To edit, cancel or end project, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -177,11 +170,11 @@ namespace courseWorkDB
             }
             else
             {
-                MessageBox.Show("To edit or delete project, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("To edit, cancel or end project, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void button2_Click(object sender, EventArgs e) // delete project
+        private void button2_Click(object sender, EventArgs e) // cancel project
         {
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int project_id))
             {
@@ -195,7 +188,7 @@ namespace courseWorkDB
                         {
 
                             projectId = project_id;
-                            DialogResult result = MessageBox.Show("Are you sure that you want to delete this project?", "Confirm action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                            DialogResult result = MessageBox.Show("Are you sure that you want to cancel this project?", "Confirm action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                             if (result == DialogResult.Yes)
                             {
                                 reader.Close();
@@ -224,7 +217,7 @@ namespace courseWorkDB
                         }
                         else
                         {
-                            MessageBox.Show("To edit or delete project, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("To edit, cancel or end project, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -232,7 +225,50 @@ namespace courseWorkDB
             }
             else
             {
-                MessageBox.Show("To edit or delete project, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("To edit, cancel or end project, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e) // end project
+        {
+            if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int project_id))
+            {
+
+                using (SqlCommand command = new SqlCommand("SELECT * FROM Проекты WHERE [Id проекта] = @id", ConnectionManager.GetConnection()))
+                {
+                    command.Parameters.AddWithValue("id", project_id);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+
+                            projectId = project_id;
+                            DialogResult result = MessageBox.Show("Are you sure that you want to end this project?", "Confirm action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                            if (result == DialogResult.Yes)
+                            {
+                                reader.Close();
+
+                                using (SqlCommand command1 = new SqlCommand("CompleteProjectAndContracts", ConnectionManager.GetConnection()))
+                                {
+                                    command1.CommandType = CommandType.StoredProcedure;
+                                    SqlParameter idParam = new SqlParameter { ParameterName = "@projectId", Value = projectId };
+                                    command1.Parameters.Add(idParam);
+                                    command1.ExecuteNonQuery();
+                                    UpdateTable();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("To edit, cancel or end project, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("To edit, cancel or end project, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

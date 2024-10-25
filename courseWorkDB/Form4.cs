@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace courseWorkDB
@@ -74,6 +67,16 @@ namespace courseWorkDB
                 }
 
             }
+        }
+
+        private void label6_MouseEnter(object sender, EventArgs e)
+        {
+            textBox2.PasswordChar = '\0';
+        }
+
+        private void label6_MouseLeave(object sender, EventArgs e)
+        {
+            textBox2.PasswordChar = '*';
         }
     }
 }

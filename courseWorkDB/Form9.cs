@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace courseWorkDB
@@ -33,25 +26,25 @@ namespace courseWorkDB
             dataGridView1.Columns.Add("status", "Status");
 
 
-                using (SqlCommand command = new SqlCommand("SELECT Предложения.[Id предложения], Проекты.[Название проекта], " +
-                    "Предложения.[Текст предложения], Предложения.[Сумма ставки],  Предложения.[Статус предложения] " +
-                    "FROM Предложения JOIN Проекты ON Предложения.[Id проекта] = Проекты.[Id проекта] " +
-                    "WHERE Предложения.[Id фрилансера] = @freelancer_id;", ConnectionManager.GetConnection()))
+            using (SqlCommand command = new SqlCommand("SELECT Предложения.[Id предложения], Проекты.[Название проекта], " +
+                "Предложения.[Текст предложения], Предложения.[Сумма ставки],  Предложения.[Статус предложения] " +
+                "FROM Предложения JOIN Проекты ON Предложения.[Id проекта] = Проекты.[Id проекта] " +
+                "WHERE Предложения.[Id фрилансера] = @freelancer_id;", ConnectionManager.GetConnection()))
+            {
+                command.Parameters.AddWithValue("freelancer_id", freelancerId);
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    command.Parameters.AddWithValue("freelancer_id", freelancerId);
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    if (reader.HasRows)
                     {
-                        if (reader.HasRows)
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                dataGridView1.Rows.Add(reader.GetInt32(0), reader.GetString(1),
-                                    reader.GetString(2), reader.GetInt32(3), reader.GetString(4));
-                            }
+                            dataGridView1.Rows.Add(reader.GetInt32(0), reader.GetString(1),
+                                reader.GetString(2), reader.GetInt32(3), reader.GetString(4));
                         }
                     }
                 }
-            
+            }
+
         }
 
         private void button3_Click(object sender, EventArgs e) // new bid
@@ -70,7 +63,8 @@ namespace courseWorkDB
 
         private void button5_Click(object sender, EventArgs e) // save
         {
-            if (int.TryParse(textBox1.Text, out int project_id) && int.TryParse(textBox2.Text, out int bet)) {
+            if (int.TryParse(textBox1.Text, out int project_id) && int.TryParse(textBox2.Text, out int bet))
+            {
                 string text = richTextBox1.Text;
                 if (text.Length > 1000) { MessageBox.Show("Text is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
                 else
@@ -152,33 +146,33 @@ namespace courseWorkDB
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int bid_id))
             {
 
-                    using (SqlCommand command = new SqlCommand("SELECT * FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
+                using (SqlCommand command = new SqlCommand("SELECT * FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
+                {
+                    command.Parameters.AddWithValue("id", bid_id);
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        command.Parameters.AddWithValue("id", bid_id);
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        if (reader.HasRows)
                         {
-                            if (reader.HasRows)
-                            {
-                                textBox1.Text = bid_id.ToString();
-                                bidId = bid_id;
-                                label3.Visible = true;
-                                label3.Text = "Bid id: ";
-                                label2.Visible = true;
-                                label5.Visible = true;
-                                textBox1.Visible = true;
-                                textBox1.Enabled = false;
-                                textBox2.Visible = true;
-                                richTextBox1.Visible = true;
-                                button5.Visible = true;
-                                newBid = false;
-                            }
-                            else
-                            {
-                                MessageBox.Show("To edit or delete bid, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
+                            textBox1.Text = bid_id.ToString();
+                            bidId = bid_id;
+                            label3.Visible = true;
+                            label3.Text = "Bid id: ";
+                            label2.Visible = true;
+                            label5.Visible = true;
+                            textBox1.Visible = true;
+                            textBox1.Enabled = false;
+                            textBox2.Visible = true;
+                            richTextBox1.Visible = true;
+                            button5.Visible = true;
+                            newBid = false;
+                        }
+                        else
+                        {
+                            MessageBox.Show("To edit or delete bid, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
-                
+                }
+
             }
             else
             {
@@ -191,21 +185,22 @@ namespace courseWorkDB
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int bid_id))
             {
 
-                    using (SqlCommand command = new SqlCommand("SELECT * FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
+                using (SqlCommand command = new SqlCommand("SELECT * FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
+                {
+                    command.Parameters.AddWithValue("id", bid_id);
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        command.Parameters.AddWithValue("id", bid_id);
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        if (reader.HasRows)
                         {
-                            if (reader.HasRows)
+                            bidId = bid_id;
+                            DialogResult result = MessageBox.Show("Are you sure that you want to delete this bid?", "Confirm action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                            if (result == DialogResult.Yes)
                             {
-                                bidId = bid_id;
-                                DialogResult result = MessageBox.Show("Are you sure that you want to delete this bid?", "Confirm action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                                if (result == DialogResult.Yes) {
-                                    reader.Close();
-                                    using (SqlCommand command1 = new SqlCommand("DELETE FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
-                                    {
-                                        command1.Parameters.AddWithValue("id", bidId);
-                                        command1.ExecuteNonQuery();
+                                reader.Close();
+                                using (SqlCommand command1 = new SqlCommand("DELETE FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
+                                {
+                                    command1.Parameters.AddWithValue("id", bidId);
+                                    command1.ExecuteNonQuery();
 
                                     label3.Visible = false;
                                     label2.Visible = false;
@@ -220,16 +215,16 @@ namespace courseWorkDB
                                     textBox2.Text = "";
                                     richTextBox1.Text = "";
                                     UpdateTable();
-                                    }
                                 }
                             }
-                            else
-                            {
-                                MessageBox.Show("To edit or delete bid, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("To edit or delete bid, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
-                
+                }
+
             }
             else
             {

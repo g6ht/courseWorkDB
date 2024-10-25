@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace courseWorkDB
@@ -35,8 +28,8 @@ namespace courseWorkDB
             using (SqlCommand command = new SqlCommand("SELECT c.[Id контракта], p.[Название проекта], u.[Имя пользователя], c.[Дата начала], c.[Дата окончания], c.[Статус контракта] " +
                 "FROM Контракты c " +
                 "JOIN Проекты p ON c.[Id проекта] = p.[Id проекта] " +
-                "JOIN Фрилансеры f ON c.[Id фрилансера] = f.[Id фрилансера] " +
-                "JOIN Пользователи u ON f.[Id пользователя] = u.[Id пользователя] " +
+                "LEFT JOIN Фрилансеры f ON c.[Id фрилансера] = f.[Id фрилансера] " +
+                "LEFT JOIN Пользователи u ON f.[Id пользователя] = u.[Id пользователя] " +
                 "WHERE p.[Id нанимателя] = @employer_id;", ConnectionManager.GetConnection()))
             {
                 command.Parameters.AddWithValue("employer_id", employerId);
@@ -46,8 +39,19 @@ namespace courseWorkDB
                     {
                         while (reader.Read())
                         {
-                            dataGridView1.Rows.Add(reader.GetInt32(0), reader.GetString(1),
-                                reader.GetString(2), reader.GetDateTime(3).ToShortDateString(), reader.GetDateTime(4).ToShortDateString(), reader.GetString(5));
+                            int cid = 0;
+                            string pname = "";
+                            string freelancer = "";
+                            string start = "";
+                            string end = "";
+                            string status = reader.GetString(5);
+                            if (!reader.IsDBNull(0)) { cid = reader.GetInt32(0); }
+                            if (!reader.IsDBNull(1)) { pname = reader.GetString(1); }
+                            if (!reader.IsDBNull(2)) { freelancer = reader.GetString(2); }
+                            if (!reader.IsDBNull(3)) { start = reader.GetDateTime(3).ToShortDateString(); }
+                            if (!reader.IsDBNull(4)) { end = reader.GetDateTime(4).ToShortDateString(); }
+                            if (reader.IsDBNull(2)) { freelancer = "deleted account"; }
+                            dataGridView1.Rows.Add(cid, pname, freelancer, start, end, status);
                         }
                     }
                 }
@@ -197,7 +201,7 @@ namespace courseWorkDB
                         }
                         else
                         {
-                            MessageBox.Show("To edit or delete contract, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("To edit or cancel contract, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -205,11 +209,11 @@ namespace courseWorkDB
             }
             else
             {
-                MessageBox.Show("To edit or delete contract, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("To edit or cancel contract, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void button2_Click(object sender, EventArgs e) // delete contract
+        private void button2_Click(object sender, EventArgs e) // cancel contract
         {
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int contract_id))
             {
@@ -221,9 +225,9 @@ namespace courseWorkDB
                     {
                         if (reader.HasRows)
                         {
-                            
+
                             contractId = contract_id;
-                            DialogResult result = MessageBox.Show("Are you sure that you want to delete this contract?", "Confirm action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                            DialogResult result = MessageBox.Show("Are you sure that you want to cancel this contract?", "Confirm action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                             if (result == DialogResult.Yes)
                             {
                                 reader.Close();
@@ -249,11 +253,11 @@ namespace courseWorkDB
                                     dateTimePicker2.Value = DateTime.Now;
                                 }
                             }
-                           
+
                         }
                         else
                         {
-                            MessageBox.Show("To edit or delete contract, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("To edit or cancel contract, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -261,7 +265,7 @@ namespace courseWorkDB
             }
             else
             {
-                MessageBox.Show("To edit or delete contract, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("To edit or cancel contract, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

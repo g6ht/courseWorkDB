@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace courseWorkDB
@@ -26,25 +18,35 @@ namespace courseWorkDB
             dataGridView1.Columns.Add("date", "Payment date");
             dataGridView1.Columns.Add("status", "Status");
 
-                using (SqlCommand command = new SqlCommand("SELECT Платежи.[Id платежа], Платежи.[Id контракта],  Проекты.[Название проекта], " +
-                    "Платежи.[Сумма платежа], Платежи.[Дата платежа],  Платежи.[Статус платежа] " + 
-                    "FROM Платежи JOIN Контракты ON Платежи.[Id контракта] = Контракты.[Id контракта] " +
-                    "JOIN Проекты ON Контракты.[Id проекта] = Проекты.[Id проекта] WHERE Контракты.[Id фрилансера] = @freelancer_id;", ConnectionManager.GetConnection()))
+            using (SqlCommand command = new SqlCommand("SELECT Платежи.[Id платежа], Платежи.[Id контракта],  Проекты.[Название проекта], " +
+                "Платежи.[Сумма платежа], Платежи.[Дата платежа],  Платежи.[Статус платежа] " +
+                "FROM Платежи JOIN Контракты ON Платежи.[Id контракта] = Контракты.[Id контракта] " +
+                "JOIN Проекты ON Контракты.[Id проекта] = Проекты.[Id проекта] WHERE Контракты.[Id фрилансера] = @freelancer_id;", ConnectionManager.GetConnection()))
+            {
+                command.Parameters.AddWithValue("freelancer_id", fId);
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    command.Parameters.AddWithValue("freelancer_id", fId);
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    if (reader.HasRows)
                     {
-                        if (reader.HasRows)
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                dataGridView1.Rows.Add(reader.GetInt32(0), reader.GetInt32(1),
-                                    reader.GetString(2), reader.GetInt32(3), reader.GetDateTime(4).ToShortDateString(), reader.GetString(5));
-                            }
+                            dataGridView1.Rows.Add(reader.GetInt32(0), reader.GetInt32(1),
+                                reader.GetString(2), reader.GetInt32(3), reader.GetDateTime(4).ToShortDateString(), reader.GetString(5));
                         }
                     }
                 }
-            
+            }
+            using(SqlCommand command = new SqlCommand("SELECT SUM(Платежи.[Сумма платежа]) " +
+                "FROM Платежи JOIN Контракты ON Платежи.[Id контракта] = Контракты.[Id контракта] " +
+                "JOIN Проекты ON Контракты.[Id проекта] = Проекты.[Id проекта] " +
+                "WHERE Контракты.[Id фрилансера] = @freelancer_id " +
+                "AND Платежи.[Статус платежа] = 'Успешный';", ConnectionManager.GetConnection()))
+            {
+                command.Parameters.AddWithValue("freelancer_id", fId);
+                label3.Text = command.ExecuteScalar().ToString();
+            }
+            //label3
+
         }
     }
 }

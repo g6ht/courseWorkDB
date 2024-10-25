@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace courseWorkDB
+﻿namespace courseWorkDB
 {
     public class User
     {
@@ -22,9 +16,7 @@ namespace courseWorkDB
             this.email = email;
             this.phone_number = phone_number;
         }
-        public int getId() { return id; }
         public string Username { get { return this.username; } set { this.username = value; } }
-        public string getRole() { return role; }
         public string Email { get { return this.email; } set { this.email = value; } }
         public string PhoneNumber { get { return this.phone_number; } set { this.phone_number = value; } }
 
