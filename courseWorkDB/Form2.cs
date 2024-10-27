@@ -15,9 +15,10 @@ namespace courseWorkDB
         {
             string username = textBox1.Text;
             byte[] password = Init.sha256_hash(textBox2.Text);
+            string query = "SELECT * FROM Пользователи WHERE [Имя пользователя] = @username " + // запрос 1 (вход в систему)
+                            "AND Пароль = @password";
 
-            using (SqlCommand command = new SqlCommand("SELECT * FROM Пользователи WHERE [Имя пользователя] = @username " +
-                    "AND Пароль = @password", ConnectionManager.GetConnection()))
+            using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
             {
                 command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@password", password);
@@ -32,7 +33,8 @@ namespace courseWorkDB
                             {
                                 int id = reader.GetInt32(0);
                                 reader.Close();
-                                using (SqlCommand command1 = new SqlCommand("SELECT [Id Фрилансера] FROM Фрилансеры WHERE [Id пользователя] = @id;", ConnectionManager.GetConnection()))
+                                query = "SELECT [Id Фрилансера] FROM Фрилансеры WHERE [Id пользователя] = @id;"; // запрос 2 (получение Id фрилансера)
+                                using (SqlCommand command1 = new SqlCommand(query, ConnectionManager.GetConnection()))
                                 {
                                     command1.Parameters.AddWithValue("@id", id);
                                     int fId = (int)command1.ExecuteScalar();
@@ -47,7 +49,8 @@ namespace courseWorkDB
                             {
                                 int id = reader.GetInt32(0);
                                 reader.Close();
-                                using (SqlCommand command1 = new SqlCommand("SELECT [Id нанимателя] FROM Наниматели WHERE [Id пользователя] = @id", ConnectionManager.GetConnection()))
+                                query = "SELECT [Id нанимателя] FROM Наниматели WHERE [Id пользователя] = @id;"; // запрос 3 (получение Id нанимателя)
+                                using (SqlCommand command1 = new SqlCommand(query, ConnectionManager.GetConnection()))
                                 {
                                     command1.Parameters.AddWithValue("@id", id);
                                     int eId = (int)command1.ExecuteScalar();

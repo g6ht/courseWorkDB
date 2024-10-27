@@ -25,11 +25,12 @@ namespace courseWorkDB
             dataGridView1.Columns.Add("bet", "Bet");
             dataGridView1.Columns.Add("status", "Status");
 
-
-            using (SqlCommand command = new SqlCommand("SELECT Предложения.[Id предложения], Проекты.[Название проекта], " +
+            string query = "SELECT Предложения.[Id предложения], Проекты.[Название проекта], " +
                 "Предложения.[Текст предложения], Предложения.[Сумма ставки],  Предложения.[Статус предложения] " +
                 "FROM Предложения JOIN Проекты ON Предложения.[Id проекта] = Проекты.[Id проекта] " +
-                "WHERE Предложения.[Id фрилансера] = @freelancer_id;", ConnectionManager.GetConnection()))
+                "WHERE Предложения.[Id фрилансера] = @freelancer_id;"; // запрос 14 (просмотр информации о предложениях фрилансера)
+
+            using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
             {
                 command.Parameters.AddWithValue("freelancer_id", freelancerId);
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -73,17 +74,19 @@ namespace courseWorkDB
                     if (newBid)
                     {
                         com = "INSERT INTO Предложения ([Id проекта], [Id фрилансера], [Текст предложения], [Сумма ставки]) " +
-                            "VALUES (@project_id, @freelancer_id, @text, @sum);";
+                            "VALUES (@project_id, @freelancer_id, @text, @sum);"; // запрос 15 (создание предложения)
                     }
                     else
                     {
                         com = "UPDATE Предложения SET [Текст предложения] = @text, [Сумма ставки] = @sum " +
-                            "WHERE [Id предложения] = @bid_id;";
+                            "WHERE [Id предложения] = @bid_id;"; // запрос 16 (редактирование предложения)
                     }
 
                     if (newBid)
                     {
-                        using (SqlCommand command1 = new SqlCommand("SELECT * FROM Проекты WHERE [Id проекта] = @id", ConnectionManager.GetConnection()))
+                        string query = "SELECT * FROM Проекты WHERE [Id проекта] = @id"; // запрос 17 (проверка на существование проекта)
+
+                        using (SqlCommand command1 = new SqlCommand(query, ConnectionManager.GetConnection()))
                         {
                             command1.Parameters.AddWithValue("id", project_id);
                             using (SqlDataReader reader = command1.ExecuteReader())
@@ -145,8 +148,9 @@ namespace courseWorkDB
         {
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int bid_id))
             {
+                string query = "SELECT * FROM Предложения WHERE [Id предложения] = @id"; // запрос 18 (проверка на существование предложения)
 
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
+                using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("id", bid_id);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -184,8 +188,9 @@ namespace courseWorkDB
         {
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int bid_id))
             {
+                string query = "SELECT * FROM Предложения WHERE [Id предложения] = @id"; // запрос 18 (проверка на существование предложения)
 
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
+                using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("id", bid_id);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -197,7 +202,10 @@ namespace courseWorkDB
                             if (result == DialogResult.Yes)
                             {
                                 reader.Close();
-                                using (SqlCommand command1 = new SqlCommand("DELETE FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
+
+                                query = "DELETE FROM Предложения WHERE [Id предложения] = @id"; // запрос 19 (удаление предложения)
+
+                                using (SqlCommand command1 = new SqlCommand(query, ConnectionManager.GetConnection()))
                                 {
                                     command1.Parameters.AddWithValue("id", bidId);
                                     command1.ExecuteNonQuery();

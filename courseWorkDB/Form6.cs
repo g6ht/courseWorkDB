@@ -27,9 +27,12 @@ namespace courseWorkDB
                 else if (newInfo.Length > 1000) { MessageBox.Show("Bio is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
                 else
                 {
-                    using (SqlCommand command = new SqlCommand("UPDATE Фрилансеры " +
-                        "SET Навыки = @newSkills, [Опыт работы] = @newExperince, [Часовая ставка] = @newRate, [Информация о себе] = @newInfo " +
-                        "WHERE [Id фрилансера] = @freelancerId;", ConnectionManager.GetConnection()))
+
+                    string query = "UPDATE Фрилансеры " + // запрос 7 (редактирование портфолио фрилансера)
+                                    "SET Навыки = @newSkills, [Опыт работы] = @newExperince, [Часовая ставка] = @newRate, [Информация о себе] = @newInfo " +
+                                    "WHERE [Id фрилансера] = @freelancerId;";
+
+                    using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                     {
                         command.Parameters.AddWithValue("@newSkills", newSkills);
                         command.Parameters.AddWithValue("@newExperince", newExperince);

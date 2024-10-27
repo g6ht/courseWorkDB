@@ -15,8 +15,9 @@ namespace courseWorkDB
             string username, role, email, phone_number, password = "";
             InitializeComponent();
 
+            string query = "SELECT * FROM Пользователи WHERE [Id пользователя] = @id"; // запрос 8 (просмотр информации об учётной записи)
 
-            using (SqlCommand command = new SqlCommand("SELECT * FROM Пользователи WHERE [Id пользователя] = @id", ConnectionManager.GetConnection()))
+            using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
             {
                 command.Parameters.AddWithValue("@id", userId);
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -116,7 +117,8 @@ namespace courseWorkDB
             else if (newPhoneNumber.Length > 20) { MessageBox.Show("Phone number is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
             else
             {
-                using (SqlCommand command1 = new SqlCommand("SELECT * FROM Пользователи WHERE [Электронная почта] = @email;", ConnectionManager.GetConnection()))
+                string query = "SELECT * FROM Пользователи WHERE [Электронная почта] = @email;"; // запрос 9 (проверка уникальности новой почты)
+                using (SqlCommand command1 = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command1.Parameters.AddWithValue("email", newEmail);
                     using (SqlDataReader reader = command1.ExecuteReader())
@@ -128,7 +130,10 @@ namespace courseWorkDB
                         else
                         {
                             reader.Close();
-                            using (SqlCommand command2 = new SqlCommand("SELECT * FROM Пользователи WHERE [Номер телефона] = @phoneNumber;", ConnectionManager.GetConnection()))
+
+                            query = "SELECT * FROM Пользователи WHERE [Номер телефона] = @phoneNumber;"; // запрос 10 (проверка уникальности нового номера телефона)
+
+                            using (SqlCommand command2 = new SqlCommand(query, ConnectionManager.GetConnection()))
                             {
                                 command2.Parameters.AddWithValue("phoneNumber", newEmail);
                                 using (SqlDataReader reader1 = command2.ExecuteReader())
@@ -140,7 +145,10 @@ namespace courseWorkDB
                                     else
                                     {
                                         reader1.Close();
-                                        using (SqlCommand command3 = new SqlCommand("SELECT * FROM Пользователи WHERE [Имя пользователя] = @username;", ConnectionManager.GetConnection()))
+
+                                        query = "SELECT * FROM Пользователи WHERE [Имя пользователя] = @username;"; // запрос 11 (проверка уникальности нового имени пользователя)
+
+                                        using (SqlCommand command3 = new SqlCommand(query, ConnectionManager.GetConnection()))
                                         {
                                             command3.Parameters.AddWithValue("username", newUsername);
                                             using (SqlDataReader reader2 = command3.ExecuteReader())
@@ -152,9 +160,12 @@ namespace courseWorkDB
                                                 else
                                                 {
                                                     reader2.Close();
-                                                    using (SqlCommand command = new SqlCommand("UPDATE Пользователи " +
-                                                        "SET [Электронная почта] = @newEmail, [Номер телефона] = @newPhoneNumber, [Имя пользователя] = @newUsername, Пароль = @newPassword " +
-                                                        "WHERE [Id пользователя] = @userId;", ConnectionManager.GetConnection()))
+
+                                                    query = "UPDATE Пользователи " + // запрос 12 (редактирование учётной записи)
+                                                            "SET [Электронная почта] = @newEmail, [Номер телефона] = @newPhoneNumber, [Имя пользователя] = @newUsername, Пароль = @newPassword " +
+                                                            "WHERE [Id пользователя] = @userId;";
+
+                                                    using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                                                     {
                                                         command.Parameters.AddWithValue("newEmail", newEmail);
                                                         command.Parameters.AddWithValue("newPhoneNumber", newPhoneNumber);

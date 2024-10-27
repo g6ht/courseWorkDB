@@ -26,11 +26,13 @@ namespace courseWorkDB
             dataGridView1.Columns.Add("date", "Date");
             dataGridView1.Columns.Add("status", "Status");
 
-            using (SqlCommand command = new SqlCommand("SELECT Платежи.[Id платежа], Платежи.[Id контракта], Проекты.[Название проекта], " +
-                "Платежи.[Сумма платежа], Платежи.[Дата платежа],  Платежи.[Статус платежа] " +
-                "FROM Платежи JOIN Контракты ON Платежи.[Id контракта] = Контракты.[Id контракта] " +
-                "JOIN Проекты ON Контракты.[Id проекта] = Проекты.[Id проекта] " +
-                "WHERE Проекты.[Id нанимателя] = @employer_id;", ConnectionManager.GetConnection()))
+            string query = "SELECT Платежи.[Id платежа], Платежи.[Id контракта], Проекты.[Название проекта], " +
+                            "Платежи.[Сумма платежа], Платежи.[Дата платежа],  Платежи.[Статус платежа] " +
+                            "FROM Платежи JOIN Контракты ON Платежи.[Id контракта] = Контракты.[Id контракта] " +
+                            "JOIN Проекты ON Контракты.[Id проекта] = Проекты.[Id проекта] " +
+                            "WHERE Проекты.[Id нанимателя] = @employer_id;"; // запрос 35 (просмотр информации о платежах нанимателя)
+
+            using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
             {
                 command.Parameters.AddWithValue("employer_id", employerId);
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -75,16 +77,19 @@ namespace courseWorkDB
                     if (newPayment)
                     {
                         com = "INSERT INTO Платежи ([Id контракта], [Сумма платежа], [Дата платежа], [Статус платежа]) " +
-                            "VALUES (@contract_id, @sum, @date, @status);";
+                            "VALUES (@contract_id, @sum, @date, @status);"; // запрос 36 (создание платежа)
                     }
                     else
                     {
                         com = "UPDATE Платежи SET [Сумма платежа] = @new_sum, [Дата платежа] = @new_date, [Статус платежа] = @new_status " +
-                            "WHERE [Id платежа] = @payment_id;";
+                            "WHERE [Id платежа] = @payment_id;"; // запрос 37 (редактирование платежа)
                     }
                     if (newPayment)
                     {
-                        using (SqlCommand command1 = new SqlCommand("SELECT * FROM Контракты WHERE [Id контракта] = @id", ConnectionManager.GetConnection()))
+
+                        string query = "SELECT * FROM Контракты WHERE [Id контракта] = @id"; // запрос 34 (проверка на существование контракта)
+
+                        using (SqlCommand command1 = new SqlCommand(query, ConnectionManager.GetConnection()))
                         {
                             command1.Parameters.AddWithValue("id", contractId);
                             using (SqlDataReader reader = command1.ExecuteReader())
@@ -150,8 +155,9 @@ namespace courseWorkDB
         {
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int payment_id))
             {
+                string query = "SELECT * FROM Платежи WHERE [Id платежа] = @id"; // запрос 38 (проверка на существование платежа)
 
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Платежи WHERE [Id платежа] = @id", ConnectionManager.GetConnection()))
+                using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("id", payment_id);
                     using (SqlDataReader reader = command.ExecuteReader())

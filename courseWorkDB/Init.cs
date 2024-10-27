@@ -38,7 +38,10 @@ namespace courseWorkDB
         {
 
             string username, role, email, phone_number;
-            using (SqlCommand command = new SqlCommand("SELECT * FROM Пользователи WHERE [Id пользователя] = @id", ConnectionManager.GetConnection()))
+
+            string query = "SELECT * FROM Пользователи WHERE [Id пользователя] = @id"; // запрос 39 (получение всей информации о пользователе)
+
+            using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
             {
                 command.Parameters.AddWithValue("@id", userId);
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -55,7 +58,10 @@ namespace courseWorkDB
             {
                 string skills = "", experience = "", info = "";
                 int rate = 0;
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Фрилансеры WHERE [Id фрилансера] = @id;", ConnectionManager.GetConnection()))
+
+                query = "SELECT * FROM Фрилансеры WHERE [Id фрилансера] = @id;"; // запрос 40 (получение всей информации о фрилансере)
+
+                using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("@id", fId);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -76,7 +82,10 @@ namespace courseWorkDB
         private static void InitEmployer(bool newAccount, int userId, int eId)
         {
             string username, role, email, phone_number;
-            using (SqlCommand command = new SqlCommand("SELECT * FROM Пользователи WHERE [Id пользователя] = @id", ConnectionManager.GetConnection()))
+
+            string query = "SELECT * FROM Пользователи WHERE [Id пользователя] = @id"; // запрос 39 (получение всей информации о пользователе)
+
+            using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
             {
                 command.Parameters.AddWithValue("@id", userId);
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -92,7 +101,10 @@ namespace courseWorkDB
             if (!newAccount)
             {
                 string companyName = "", info = "";
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Наниматели WHERE [Id нанимателя] = @id;", ConnectionManager.GetConnection()))
+
+                query = "SELECT * FROM Наниматели WHERE [Id нанимателя] = @id;"; // запрос 41 (получение всей информвции о нанимателе)
+
+                using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("@id", eId);
                     using (SqlDataReader reader = command.ExecuteReader())

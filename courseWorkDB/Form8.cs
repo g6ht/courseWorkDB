@@ -18,8 +18,10 @@ namespace courseWorkDB
             dataGridView1.Columns.Add("deadline", "Deadline");
             dataGridView1.Columns.Add("status", "Status");
 
-            using (SqlCommand command = new SqlCommand("SELECT Проекты.*, Наниматели.[Название компании] " +
-                "FROM Проекты LEFT JOIN Наниматели ON Проекты.[Id нанимателя] = Наниматели.[Id нанимателя];", ConnectionManager.GetConnection()))
+            string query = "SELECT Проекты.*, Наниматели.[Название компании] " + // запрос 13 (поиск информации о проектах)
+                            "FROM Проекты LEFT JOIN Наниматели ON Проекты.[Id нанимателя] = Наниматели.[Id нанимателя];";
+
+            using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
             {
                 using (SqlDataReader reader = command.ExecuteReader())
                 {

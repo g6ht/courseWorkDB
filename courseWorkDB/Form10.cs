@@ -17,10 +17,12 @@ namespace courseWorkDB
             dataGridView1.Columns.Add("end", "End date");
             dataGridView1.Columns.Add("status", "Status");
 
-            using (SqlCommand command = new SqlCommand("SELECT Контракты.[Id контракта], Проекты.[Название проекта], " +
-                "Контракты.[Дата начала], Контракты.[Дата окончания],  Контракты.[Статус контракта] " +
-                "FROM Контракты JOIN Проекты ON Контракты.[Id проекта] = Проекты.[Id проекта] " +
-                "WHERE Контракты.[Id фрилансера] = @freelancer_id;", ConnectionManager.GetConnection()))
+            string query = "SELECT Контракты.[Id контракта], Проекты.[Название проекта], " + // запрос 20 (просмотр информации о контрактах фрилансера)
+                            "Контракты.[Дата начала], Контракты.[Дата окончания],  Контракты.[Статус контракта] " +
+                            "FROM Контракты JOIN Проекты ON Контракты.[Id проекта] = Проекты.[Id проекта] " +
+                            "WHERE Контракты.[Id фрилансера] = @freelancer_id;";
+
+            using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
             {
                 command.Parameters.AddWithValue("freelancer_id", fId);
                 using (SqlDataReader reader = command.ExecuteReader())

@@ -24,12 +24,14 @@ namespace courseWorkDB
             dataGridView1.Columns.Add("sum", "Bet");
             dataGridView1.Columns.Add("status", "Status");
 
-            using (SqlCommand command = new SqlCommand("SELECT П.[Id предложения], Пр.[Название проекта], Пол.[Имя пользователя], П.[Текст предложения], П.[Сумма ставки], П.[Статус предложения], П.[Id фрилансера] " +
-                "FROM Предложения П " +
-                "JOIN Проекты Пр ON П.[Id проекта] = Пр.[Id проекта] " +
-                "LEFT JOIN Фрилансеры Ф ON П.[Id фрилансера] = Ф.[Id фрилансера] " +
-                "LEFT JOIN Пользователи Пол ON Ф.[Id пользователя] = Пол.[Id пользователя] " +
-                "WHERE Пр.[Id нанимателя] = @employer_id;", ConnectionManager.GetConnection()))
+            string query = "SELECT П.[Id предложения], Пр.[Название проекта], Пол.[Имя пользователя], П.[Текст предложения], П.[Сумма ставки], П.[Статус предложения], П.[Id фрилансера] " +
+                            "FROM Предложения П " +
+                            "JOIN Проекты Пр ON П.[Id проекта] = Пр.[Id проекта] " +
+                            "LEFT JOIN Фрилансеры Ф ON П.[Id фрилансера] = Ф.[Id фрилансера] " +
+                            "LEFT JOIN Пользователи Пол ON Ф.[Id пользователя] = Пол.[Id пользователя] " +
+                            "WHERE Пр.[Id нанимателя] = @employer_id;"; // запрос 24 (поиск информации о предложениях)
+
+            using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
             {
                 command.Parameters.AddWithValue("employer_id", employerId);
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -62,8 +64,9 @@ namespace courseWorkDB
         {
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int bidId))
             {
+                string query = "SELECT * FROM Предложения WHERE [Id предложения] = @id"; // запрос 18 (проверка на существование предложения)
 
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
+                using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("id", bidId);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -103,8 +106,9 @@ namespace courseWorkDB
         {
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int bidId))
             {
+                string query = "SELECT * FROM Предложения WHERE [Id предложения] = @id"; // запрос 18 (проверка на существование предложения)
 
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Предложения WHERE [Id предложения] = @id", ConnectionManager.GetConnection()))
+                using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("id", bidId);
                     using (SqlDataReader reader = command.ExecuteReader())

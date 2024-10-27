@@ -25,12 +25,14 @@ namespace courseWorkDB
             dataGridView1.Columns.Add("end", "End date");
             dataGridView1.Columns.Add("status", "Status");
 
-            using (SqlCommand command = new SqlCommand("SELECT c.[Id контракта], p.[Название проекта], u.[Имя пользователя], c.[Дата начала], c.[Дата окончания], c.[Статус контракта] " +
-                "FROM Контракты c " +
-                "JOIN Проекты p ON c.[Id проекта] = p.[Id проекта] " +
-                "LEFT JOIN Фрилансеры f ON c.[Id фрилансера] = f.[Id фрилансера] " +
-                "LEFT JOIN Пользователи u ON f.[Id пользователя] = u.[Id пользователя] " +
-                "WHERE p.[Id нанимателя] = @employer_id;", ConnectionManager.GetConnection()))
+            string query = "SELECT c.[Id контракта], p.[Название проекта], u.[Имя пользователя], c.[Дата начала], c.[Дата окончания], c.[Статус контракта] " +
+                            "FROM Контракты c " +
+                            "JOIN Проекты p ON c.[Id проекта] = p.[Id проекта] " +
+                            "LEFT JOIN Фрилансеры f ON c.[Id фрилансера] = f.[Id фрилансера] " +
+                            "LEFT JOIN Пользователи u ON f.[Id пользователя] = u.[Id пользователя] " +
+                            "WHERE p.[Id нанимателя] = @employer_id;"; // запрос 29 (просмотр информации о контрактах нанимателя)
+
+            using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
             {
                 command.Parameters.AddWithValue("employer_id", employerId);
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -84,16 +86,20 @@ namespace courseWorkDB
                 string com;
                 if (newContract)
                 {
+                    // запрос 30 (создание контракта)
                     com = "INSERT INTO Контракты ([Id проекта], [Id фрилансера], [Дата начала], [Дата окончания]) VALUES (@project_id, @freelancer_id, @start, @end);";
                 }
                 else
                 {
+                    // запрос 31 (редактирование контракта)
                     com = "UPDATE Контракты SET [Дата начала] = @new_start, [Дата окончания] = @new_end WHERE [Id контракта] = @contract_id;";
                 }
 
                 if (newContract)
                 {
-                    using (SqlCommand command1 = new SqlCommand("SELECT * FROM Проекты WHERE [Id проекта] = @id", ConnectionManager.GetConnection()))
+                    string query = "SELECT * FROM Проекты WHERE [Id проекта] = @id"; // запрос 17 (проверка на существование проекта)
+
+                    using (SqlCommand command1 = new SqlCommand(query, ConnectionManager.GetConnection()))
                     {
                         command1.Parameters.AddWithValue("id", project_id);
                         using (SqlDataReader reader = command1.ExecuteReader())
@@ -101,7 +107,10 @@ namespace courseWorkDB
                             if (reader.HasRows)
                             {
                                 reader.Close();
-                                using (SqlCommand command2 = new SqlCommand("SELECT * FROM Фрилансеры WHERE [Id фрилансера] = @fid", ConnectionManager.GetConnection()))
+
+                                query = "SELECT * FROM Фрилансеры WHERE [Id фрилансера] = @fid"; // запрос 32 (проверка на существование фрилансера)
+
+                                using (SqlCommand command2 = new SqlCommand(query, ConnectionManager.GetConnection()))
                                 {
                                     command2.Parameters.AddWithValue("fid", freelancer_id);
                                     using (SqlDataReader reader1 = command2.ExecuteReader())
@@ -175,7 +184,9 @@ namespace courseWorkDB
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int contract_id))
             {
 
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Контракты WHERE [Id контракта] = @id", ConnectionManager.GetConnection()))
+                string query = "SELECT * FROM Контракты WHERE [Id контракта] = @id"; // запрос 33 (проверка на существование контракта)
+
+                using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("id", contract_id);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -217,8 +228,9 @@ namespace courseWorkDB
         {
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int contract_id))
             {
+                string query = "SELECT * FROM Контракты WHERE [Id контракта] = @id"; // запрос 33 (проверка на существование контракта)
 
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Контракты WHERE [Id контракта] = @id", ConnectionManager.GetConnection()))
+                using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("id", contract_id);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -231,7 +243,10 @@ namespace courseWorkDB
                             if (result == DialogResult.Yes)
                             {
                                 reader.Close();
-                                using (SqlCommand command1 = new SqlCommand("DELETE FROM Контракты WHERE [Id контракта] = @id", ConnectionManager.GetConnection()))
+
+                                query = "DELETE FROM Контракты WHERE [Id контракта] = @id"; // запрос 34 (удаление (отмена) контракта)
+
+                                using (SqlCommand command1 = new SqlCommand(query, ConnectionManager.GetConnection()))
                                 {
                                     command1.Parameters.AddWithValue("id", contractId);
                                     command1.ExecuteNonQuery();

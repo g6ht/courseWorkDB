@@ -26,8 +26,10 @@ namespace courseWorkDB
             dataGridView1.Columns.Add("deadline", "Deadline");
             dataGridView1.Columns.Add("status", "Status");
 
-            using (SqlCommand command = new SqlCommand("SELECT [Id проекта], [Название проекта], [Описание проекта], Бюджет, [Срок выполнения], [Статус проекта] " +
-                "FROM Проекты WHERE [Id нанимателя] = @employer_id;", ConnectionManager.GetConnection()))
+            string query = "SELECT [Id проекта], [Название проекта], [Описание проекта], Бюджет, [Срок выполнения], [Статус проекта] " +
+                            "FROM Проекты WHERE [Id нанимателя] = @employer_id;"; // запрос 25 (просмотр информации о проектах нанимателя)
+
+            using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
             {
                 command.Parameters.AddWithValue("employer_id", employerId);
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -76,12 +78,12 @@ namespace courseWorkDB
                     if (newProject)
                     {
                         com = "INSERT INTO Проекты ([Id нанимателя], [Название проекта], [Описание проекта], Бюджет, [Срок выполнения]) " +
-                            "VALUES (@employer_id, @name, @info, @budget, @date);";
+                            "VALUES (@employer_id, @name, @info, @budget, @date);"; // запрос 26 (создание проекта)
                     }
                     else
                     {
                         com = "UPDATE Проекты SET [Описание проекта] = @new_info, Бюджет = @new_budget, [Срок выполнения] = @new_date " +
-                            "WHERE [Id проекта] = @project_id;";
+                            "WHERE [Id проекта] = @project_id;"; // запрос 27 (редактирование проекта)
                     }
                     if (newProject)
                     {
@@ -138,7 +140,9 @@ namespace courseWorkDB
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int project_id))
             {
 
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Проекты WHERE [Id проекта] = @id", ConnectionManager.GetConnection()))
+                string query = "SELECT * FROM Проекты WHERE [Id проекта] = @id"; // запрос 17 (проверка на существование проекта)
+
+                using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("id", project_id);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -178,8 +182,9 @@ namespace courseWorkDB
         {
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int project_id))
             {
+                string query = "SELECT * FROM Проекты WHERE [Id проекта] = @id"; // запрос 17 (проверка на существование проекта)
 
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Проекты WHERE [Id проекта] = @id", ConnectionManager.GetConnection()))
+                using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("id", project_id);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -192,7 +197,10 @@ namespace courseWorkDB
                             if (result == DialogResult.Yes)
                             {
                                 reader.Close();
-                                using (SqlCommand command1 = new SqlCommand("DELETE FROM Проекты WHERE [Id проекта] = @id", ConnectionManager.GetConnection()))
+
+                                query = "DELETE FROM Проекты WHERE [Id проекта] = @id"; // запрос 28 (удаление (отмена) проекта)
+
+                                using (SqlCommand command1 = new SqlCommand(query, ConnectionManager.GetConnection()))
                                 {
                                     command1.Parameters.AddWithValue("id", projectId);
                                     command1.ExecuteNonQuery();
@@ -233,8 +241,9 @@ namespace courseWorkDB
         {
             if (int.TryParse(dataGridView1.CurrentCell.Value.ToString(), out int project_id))
             {
+                string query = "SELECT * FROM Проекты WHERE [Id проекта] = @id"; // запрос 17 (проверка на существование проекта)
 
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Проекты WHERE [Id проекта] = @id", ConnectionManager.GetConnection()))
+                using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("id", project_id);
                     using (SqlDataReader reader = command.ExecuteReader())

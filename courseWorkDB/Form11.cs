@@ -18,10 +18,12 @@ namespace courseWorkDB
             dataGridView1.Columns.Add("date", "Payment date");
             dataGridView1.Columns.Add("status", "Status");
 
-            using (SqlCommand command = new SqlCommand("SELECT Платежи.[Id платежа], Платежи.[Id контракта],  Проекты.[Название проекта], " +
-                "Платежи.[Сумма платежа], Платежи.[Дата платежа],  Платежи.[Статус платежа] " +
-                "FROM Платежи JOIN Контракты ON Платежи.[Id контракта] = Контракты.[Id контракта] " +
-                "JOIN Проекты ON Контракты.[Id проекта] = Проекты.[Id проекта] WHERE Контракты.[Id фрилансера] = @freelancer_id;", ConnectionManager.GetConnection()))
+            string query = "SELECT Платежи.[Id платежа], Платежи.[Id контракта],  Проекты.[Название проекта], " + // запрос 21 (просмотр информации о платежах фрилансера)
+                            "Платежи.[Сумма платежа], Платежи.[Дата платежа],  Платежи.[Статус платежа] " +
+                            "FROM Платежи JOIN Контракты ON Платежи.[Id контракта] = Контракты.[Id контракта] " +
+                            "JOIN Проекты ON Контракты.[Id проекта] = Проекты.[Id проекта] WHERE Контракты.[Id фрилансера] = @freelancer_id;";
+
+            using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
             {
                 command.Parameters.AddWithValue("freelancer_id", fId);
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -36,17 +38,18 @@ namespace courseWorkDB
                     }
                 }
             }
-            using(SqlCommand command = new SqlCommand("SELECT SUM(Платежи.[Сумма платежа]) " +
-                "FROM Платежи JOIN Контракты ON Платежи.[Id контракта] = Контракты.[Id контракта] " +
-                "JOIN Проекты ON Контракты.[Id проекта] = Проекты.[Id проекта] " +
-                "WHERE Контракты.[Id фрилансера] = @freelancer_id " +
-                "AND Платежи.[Статус платежа] = 'Успешный';", ConnectionManager.GetConnection()))
+
+            query = "SELECT SUM(Платежи.[Сумма платежа]) " + // запрос 22 (просмотр суммы всех успешных платежей фрилансера)
+                    "FROM Платежи JOIN Контракты ON Платежи.[Id контракта] = Контракты.[Id контракта] " +
+                    "JOIN Проекты ON Контракты.[Id проекта] = Проекты.[Id проекта] " +
+                    "WHERE Контракты.[Id фрилансера] = @freelancer_id " +
+                    "AND Платежи.[Статус платежа] = 'Успешный';";
+
+            using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
             {
                 command.Parameters.AddWithValue("freelancer_id", fId);
                 label3.Text = command.ExecuteScalar().ToString();
             }
-            //label3
-
         }
     }
 }

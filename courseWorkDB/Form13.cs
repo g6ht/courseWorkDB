@@ -22,9 +22,11 @@ namespace courseWorkDB
             else if (newInfo.Length > 1000) { MessageBox.Show("Bio is too long", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
             else
             {
-                using (SqlCommand command = new SqlCommand("UPDATE Наниматели " +
-                    "SET [Название компании] = @new_name, [Информация о компании]  = @new_info " +
-                    "WHERE [Id нанимателя] = @employer_id;", ConnectionManager.GetConnection()))
+                string query = "UPDATE Наниматели " + // запрос 23 (редактирование портфолио нанимателя)
+                                "SET [Название компании] = @new_name, [Информация о компании]  = @new_info " +
+                                "WHERE [Id нанимателя] = @employer_id;";
+
+                using (SqlCommand command = new SqlCommand(query, ConnectionManager.GetConnection()))
                 {
                     command.Parameters.AddWithValue("@new_name", newCompanyName);
                     command.Parameters.AddWithValue("@new_info", newInfo);
