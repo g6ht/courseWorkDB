@@ -80,5 +80,10 @@ namespace courseWorkDB
         {
             textBox2.PasswordChar = '*';
         }
+
+        private void Form2_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Help.ShowHelp(this, helpProvider1.HelpNamespace);
+        }
     }
 }

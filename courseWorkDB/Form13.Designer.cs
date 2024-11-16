@@ -34,6 +34,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.SuspendLayout();
             // 
             // button1
@@ -99,6 +100,10 @@
             this.label3.TabIndex = 32;
             this.label3.Text = "Company name:";
             // 
+            // helpProvider1
+            // 
+            this.helpProvider1.HelpNamespace = "C:\\Users\\davyd\\source\\repos\\courseWorkDB\\Документация\\Документация.html";
+            // 
             // Form13
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -111,9 +116,13 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
+            this.HelpButton = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Form13";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Edit portfolio";
+            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.Form13_HelpButtonClicked);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -126,5 +135,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.HelpProvider helpProvider1;
     }
 }

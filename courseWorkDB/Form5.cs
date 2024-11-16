@@ -83,5 +83,10 @@ namespace courseWorkDB
             Form11 form11 = new Form11();
             form11.ShowDialog();
         }
+
+        private void Form5_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Help.ShowHelp(this, helpProvider1.HelpNamespace);
+        }
     }
 }

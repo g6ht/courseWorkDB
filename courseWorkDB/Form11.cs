@@ -51,5 +51,10 @@ namespace courseWorkDB
                 label3.Text = command.ExecuteScalar().ToString();
             }
         }
+
+        private void Form11_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Help.ShowHelp(this, helpProvider1.HelpNamespace);
+        }
     }
 }

@@ -73,5 +73,10 @@ namespace courseWorkDB
             Form17 form17 = new Form17();
             form17.ShowDialog();
         }
+
+        private void Form12_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Help.ShowHelp(this, helpProvider1.HelpNamespace);
+        }
     }
 }

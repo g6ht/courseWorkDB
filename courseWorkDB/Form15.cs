@@ -280,5 +280,10 @@ namespace courseWorkDB
                 MessageBox.Show("To edit, cancel or end project, click on its id", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void Form15_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Help.ShowHelp(this, helpProvider1.HelpNamespace);
+        }
     }
 }

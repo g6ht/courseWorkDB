@@ -38,5 +38,10 @@ namespace courseWorkDB
                 this.Close();
             }
         }
+
+        private void Form13_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Help.ShowHelp(this, helpProvider1.HelpNamespace);
+        }
     }
 }

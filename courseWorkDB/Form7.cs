@@ -91,6 +91,11 @@ namespace courseWorkDB
             textBox2.PasswordChar = '*';
         }
 
+        private void Form7_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Help.ShowHelp(this, helpProvider1.HelpNamespace);
+        }
+
         private void button1_Click(object sender, EventArgs e) // change
         {
             textBox1.Enabled = true;
